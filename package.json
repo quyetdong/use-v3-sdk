@@ -1,0 +1,26 @@
+{
+  "name": "use-v3-sdk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx ts-node script.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^17.0.18",
+    "tslib": "^2.3.1"
+  },
+  "dependencies": {
+    "@uniswap/sdk-core": "^3.0.1",
+    "@uniswap/v3-core": "^1.0.1",
+    "@uniswap/v3-sdk": "^3.8.2",
+    "ethers": "^5.5.4",
+    "i": "^0.3.7",
+    "ts-node": "^10.5.0",
+    "typescript": "^4.5.5"
+  }
+}
