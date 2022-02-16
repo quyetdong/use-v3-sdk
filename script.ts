@@ -5,6 +5,7 @@ import { Token } from "@uniswap/sdk-core";
 import { abi as IUniswapV3PoolABI } from "@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json";
 import { abi as IERC20ABI } from "@openzeppelin/contracts/build/contracts/IERC20Metadata.json";
 import { BigNumber } from "ethers";
+import { abi as QuoterABI } from "@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json";
 
 // user infura endpoint to query chain data from ethereum
 const infuraKey = '85fb91c950724c9585adb10ba2145b4c';
@@ -12,6 +13,7 @@ const provider = new ethers.providers.JsonRpcProvider(`https://mainnet.infura.io
 
 // tell Ethers where to look for our chain data
 const poolAddress = "0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8";
+const quoterAddress = "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6";
 
 // create interface for the functions of the pool contract that we'll be calling
 // const poolImmutablesAbi = [
@@ -27,6 +29,13 @@ const poolAddress = "0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8";
 const poolContract = new ethers.Contract(
   poolAddress,
   IUniswapV3PoolABI,
+  provider
+);
+
+// create new instance of the Quoter contract
+const quoterContract = new ethers.Contract(
+  quoterAddress,
+  QuoterABI,
   provider
 );
 
@@ -198,7 +207,19 @@ async function main() {
   // console.log(String(modPrice));
   // console.log(String(floatN));
 
-  // console.log(String(numer.div(deno)));
+  // get quote amount out
+  const amountIn = 1500;
+
+  const quotedAmountOut = await quoterContract.callStatic.quoteExactInputSingle(
+    immutables.token0,
+    immutables.token1,
+    immutables.fee,
+    amountIn.toString(),
+    0
+  );
+  console.log(String(quotedAmountOut/Math.pow(10, 12)));
+
+
 }
 
 main();
