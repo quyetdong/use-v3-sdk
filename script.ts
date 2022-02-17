@@ -129,7 +129,7 @@ async function getPoolImmutables() {
     fee,
     tickSpacing,
     maxLiquidityPerTick,
-  };
+  };    
   return immutables;
 }
 
@@ -194,13 +194,22 @@ async function main() {
   //   .pow(2)))
 
 
-  const numer = BigNumber.from(String(poolExample.token1Price.numerator));
+  const numer = BigNumber.from(String(poolExample.token1Price.numerator)); 
   const deno = BigNumber.from(String(poolExample.token1Price.denominator));
+
+  ////////////////////////////////////////////////////////////
+  // In order to find the original amount of WETH, we have to multiply the visible amount of WETH with 10^18
   const rawPrice = numer.mul(BigNumber.from(10).pow(18)).div(deno).toNumber();
+  ////////////////////////////////////////////////////////////
 
   // console.log(String(poolExample.token0Price.numerator));
   // console.log(String(poolExample.token0Price.denominator));
+
+  ////////////////////////////////////////////////////////////
+  // Similarly, we have to multiply the visible amount of USDC with 10^6, hence in the following statement, we have to divide.
   console.log(rawPrice/Math.pow(10, 6));
+  ////////////////////////////////////////////////////////////
+
   // console.log(String(modPrice));
   // console.log(String(floatN));
 
