@@ -1,7 +1,7 @@
 // import { Address } from "cluster";
 import { ethers } from "ethers";
-import { Pool } from "@uniswap/v3-sdk";
-import { Token } from "@uniswap/sdk-core";
+import { Pool, Route, Trade } from "@uniswap/v3-sdk";
+import { CurrencyAmount, Token, TradeType } from "@uniswap/sdk-core";
 import { abi as IUniswapV3PoolABI } from "@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json";
 import { abi as IERC20ABI } from "@openzeppelin/contracts/build/contracts/IERC20Metadata.json";
 import { BigNumber } from "ethers";
@@ -197,9 +197,6 @@ async function main() {
   const numer = BigNumber.from(String(poolExample.token1Price.numerator));
   const deno = BigNumber.from(String(poolExample.token1Price.denominator));
   const rawPrice = numer.mul(BigNumber.from(10).pow(18)).div(deno).toNumber();
-  // const modPrice = numer.mul(Math.pow(10, 18)).mod(deno);
-
-  // const floatN = modPrice/(deno.toNumber());
 
   // console.log(String(poolExample.token0Price.numerator));
   // console.log(String(poolExample.token0Price.denominator));
@@ -217,8 +214,21 @@ async function main() {
     amountIn.toString(),
     0
   );
-  console.log(String(quotedAmountOut/Math.pow(10, 12)));
+  // console.log(String(quotedAmountOut/Math.pow(10, 12)));
+  
+  // create a Route object, assign to swapRoute
+  const swapRoute = new Route([poolExample], TokenA, TokenB);
 
+  // create an unchecked trade, after we retrieved a quote prior
+  const uncheckedTradeExample = await Trade.createUncheckedTrade({
+    route: swapRoute,
+    inputAmount: CurrencyAmount.fromRawAmount(TokenA, amountIn.toString()),
+    outputAmount: CurrencyAmount.fromRawAmount(TokenB, quotedAmountOut.toString()),
+    tradeType: TradeType.EXACT_INPUT,
+  });
+  
+  console.log('the quoted amount out is ', quotedAmountOut.toString())
+  console.log('the unchecked trade object is ', uncheckedTradeExample);
 
 }
 
